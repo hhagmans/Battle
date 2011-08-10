@@ -1,5 +1,5 @@
 class Goblin():
-    
+    """ Erstellt Gegner vom Typ Goblin mit seinen Standardattributen"""
     def __init__(self):
         self.name = "Goblin"
         self.energie = 20
@@ -9,7 +9,7 @@ class Goblin():
         self.tempo = 2
         
 class Ork():
-    
+    """ Erstellt Gegner vom Typ Ork mit seinen Standardattributen"""
     def __init__(self):
         self.name = "Ork"
         self.energie = 25
@@ -19,7 +19,7 @@ class Ork():
         self.tempo = 2
         
 class Troll():
-    
+    """ Erstellt Gegner vom Typ Troll mit seinen Standardattributen"""
     def __init__(self):
         self.name = "Troll"
         self.energie = 30

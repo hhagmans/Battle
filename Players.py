@@ -1,5 +1,5 @@
 class Player():
-    
+    """ Erstellt den Spieler mit seinen Standardattributen, nur fŸr den Spielstart vorgesehen"""
     def __init__(self):
         self.name = "Spieler 1"
         self.energie = 100
