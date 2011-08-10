@@ -1,3 +1,11 @@
+class Nichts():
+    """Traegt der Spieler auf einem Slot nichts, wird dieses Item equipped"""
+    def __init__(self):
+        self.ID = 0
+        self.typ = "Nichts"
+        self.name = "Nichts"
+        self.wert = 0
+
 class Schwert():
     """ Erstellt ein Item vom Typ Schwert"""
     def __init__(self):
@@ -8,7 +16,7 @@ class Schwert():
         zeile2 = [1]
         self.spalte = [zeile1,zeile2]
         self.stapelbar = False
-        self.angriff = 4
+        self.wert = 4
         
         
 class Dolch():
@@ -20,7 +28,7 @@ class Dolch():
         zeile1 = [1]
         self.spalte = [zeile1]
         self.stapelbar = False
-        self.angriff = 2
+        self.wert = 2
     
 class Axt():
     """ Erstellt ein Item vom Typ Axt"""    
@@ -33,7 +41,7 @@ class Axt():
         zeile3 = [0,1]
         self.spalte = [zeile1,zeile2,zeile3]
         self.stapelbar = False
-        self.angriff = 5
+        self.wert = 5
     
 class Ruestung():
     """ Erstellt ein Item vom Typ Ruestung"""    
@@ -45,7 +53,7 @@ class Ruestung():
         zeile2 = [0,1]
         self.spalte = [zeile1,zeile2]
         self.stapelbar = False
-        self.verteidigung = 5
+        self.wert = 5
 
             
 class Hose():
@@ -58,18 +66,18 @@ class Hose():
         zeile2 = [1]
         self.spalte = [zeile1,zeile2]
         self.stapelbar = False
-        self.verteidigung = 3
+        self.wert = 3
             
-class Handschuhe():
-    """ Erstellt ein Item vom Typ Handschuhe"""    
+class Schuhe():
+    """ Erstellt ein Item vom Typ Schuhe"""    
     def __init__(self):
         self.ID = 0
         self.typ = "Kleidung"
-        self.name = "Handschuhe"
+        self.name = "Schuhe"
         zeile1 = [1]
         self.spalte = [zeile1]
         self.stapelbar = False
-        self.verteidigung = 2
+        self.wert = 2
             
 class Heiltrank():
     """ Erstellt ein Item vom Typ Heiltrank"""    
