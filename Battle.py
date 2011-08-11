@@ -2,6 +2,7 @@ import Items,time,pygame,random
 from pygame.locals import *
 
 def werteBerechnen(spieler):
+    """Berechnet temporaer fuer den Kampf den Angriffs- und Verteidigungswert aus den Attributen des Spielers und seines Equipments"""
     spieler.angriff += spieler.waffe.wert
     spieler.verteidigung += spieler.ruestung.wert + spieler.hose.wert + spieler.schuhe.wert + spieler.helm.wert
     return spieler
@@ -10,7 +11,7 @@ def Angriff(angreifer,verteidiger):
     """Schadensberechnung bei Angriff, eventuell weicht der Verteidiger aus"""
     ausweichen = verteidiger.geschicklichkeit - angreifer.geschicklichkeit
     if ausweichen <= 0:
-        ausweichen = 1                              # Ausweichwahrscheinlichkeit
+        ausweichen = 0                              # Ausweichwahrscheinlichkeit
     if random.randint(1,100) > ausweichen:
         schaden = angreifer.angriff - verteidiger.verteidigung + random.randint(-verteidiger.verteidigung,angreifer.angriff)    # Schadensberechnung
         if schaden <= 0:
@@ -21,12 +22,16 @@ def Angriff(angreifer,verteidiger):
     return schaden
         
         
-def ItemUse(item):
-    """ Prueft den Typ des uebergebenen Items und gibt dann je nach Typ einen Wert zurueck"""
+def ItemUse(item,spieler):
+    """ Prueft den Typ des uebergebenen Items und fuehrt dann ja nach Typ eine Aktion aus. Muss noch mit allen Itemtypen erweitert werden"""
     if item.typ == "Energie":
-        return item.wert
+        spieler.energie += item.wert
+        if spieler.energie > spieler.maxenergie:
+            spieler.energie = spieler.maxenergie
     elif item.typ == "Mana":
-        return item.wert
+        spieler.mana += item.wert
+        if spieler.mana > spieler.maxmana:
+            spieler.mana = spieler.maxmana
     else:
         print "Item bisher nicht benutzbar"
 
@@ -37,18 +42,19 @@ def eventhandleGegner(spieler,gegner):
     if spieler.energie < 0:
             spieler.energie = 0
     
-def eventhandleSpieler(aktion,spieler,gegner):
+def eventhandleSpieler(aktion,spieler,gegner,aktNr,pos):
     """Laest den Spieler eine Aktion ausfuehren"""
     if aktion == "angriff":
         schaden = Angriff(spieler,gegner)
         gegner.energie -= schaden
         if gegner.energie < 0:
             gegner.energie = 0
-    elif aktion == "heilung":
-        heil = ItemUse(Items.Heiltrank())
-        spieler.energie += heil
-        if spieler.energie > spieler.maxenergie:
-            spieler.energie = spieler.maxenergie
+    elif aktion == "item":
+        item = spieler.inventar.getItem(aktNr,pos)
+        if item <> None:
+            ItemUse(item,spieler)
+            spieler.inventar.entfernen(aktNr,pos)
+        
             
 def anzeigen(spieler,gegner):
     """ Zeigt Energie von Gegner und Spieler an, erstmal provisorisch"""
@@ -60,6 +66,8 @@ def Kampf(spieler,gegner):
     Usereingaben sind moeglich wie Item oder Angriff"""
     beendet = False
     aktion = "angriff"
+    aktNr = 0
+    pos = [0,0]
     aktionszaehler = 0
     uhr = pygame.time.Clock()
     spieler = werteBerechnen(spieler)
@@ -70,9 +78,8 @@ def Kampf(spieler,gegner):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     aktion = "angriff"
-                elif event.key == pygame.K_h:
-                    aktion = "heilung"
-        anzeigen(spieler,gegner)
+                elif event.key == pygame.K_i:
+                    aktion = "item"
         aktionszaehler += 1                                 # Bestimmt wann der Spieler oder der Gegner Aktionen ausfuehren koennen
         if spieler.energie <= 0:
             print "Spieler tot"
@@ -82,7 +89,10 @@ def Kampf(spieler,gegner):
             beendet = True        
         if aktionszaehler % (150 - spieler.tempo) == 0 and beendet == False:
             print "Spieler greift an"
-            eventhandleSpieler(aktion,spieler,gegner)
+            eventhandleSpieler(aktion,spieler,gegner,aktNr,pos)
+            aktion = "angriff"
+            anzeigen(spieler,gegner)
         if aktionszaehler % (150 - gegner.tempo) == 0 and beendet == False:
             print "Gegner greift an"
             eventhandleGegner(spieler,gegner)
+            anzeigen(spieler,gegner)
