@@ -16,6 +16,20 @@ def Angriff(angreifer,verteidiger):
         schaden = angreifer.angriff - verteidiger.verteidigung + random.randint(-verteidiger.verteidigung,angreifer.angriff)    # Schadensberechnung
         if schaden <= 0:
             schaden = 1
+        krit = angreifer.angriff-verteidiger.verteidigung
+        if verteidiger.energie < (verteidiger.maxenergie / 3):
+            krit += 10
+            if krit > 100:
+                krit = 100
+        if random.randint(1,100) < krit:
+            if verteidiger.geschicklichkeit / 5 < 1:
+                abzug = 1
+            else:
+                abzug = verteidiger.geschicklichkeit / 5
+            verteidiger.geschicklichkeit -= abzug
+            if verteidiger.geschicklichkeit <= 0:
+                verteidiger.geschicklichkeit = 1
+            print "Kritischer Treffer"
     else:
         print "Ausgewichen!"
         schaden = 0
@@ -59,7 +73,7 @@ def eventhandleSpieler(aktion,spieler,gegner,aktNr,pos):
 def anzeigen(spieler,gegner):
     """ Zeigt Energie von Gegner und Spieler an, erstmal provisorisch"""
     print "Kampf: \n%s \t Energie: %i" %(spieler.name,spieler.energie)
-    print "%s \t Energie: %i" %(gegner.name,gegner.energie)
+    print "%s \t Energie: %i Geschick: %i" %(gegner.name,gegner.energie,gegner.geschicklichkeit)
 
 def Kampf(spieler,gegner):
     """Startet einen Kampf zwischen Spieler und Gegner, bis einer der beiden keine Energie mehr hat
